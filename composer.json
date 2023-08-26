@@ -1,7 +1,13 @@
 {
     "name": "preload_new_user",
-    "type": "drupal-module",
-    "description": "Create new user with infor from URL",
-    "keywords": [],
-    "minimum-stability": "dev"
+    "description": "Permet de préremplir les infos d'un nouvel utilisateur à partir d'un formulaire d'inscription",
+    "type": "drupal-custom-module",
+    "authors": [
+        {
+            "name": "Cyril Béguet",
+            "email": "webmaster.beguet@free.fr"
+        }
+    ],
+    "minimum-stability": "stable"
+    "require": {}
 }
