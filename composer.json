@@ -8,6 +8,6 @@
             "email": "webmaster.beguet@free.fr"
         }
     ],
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
     "require": {}
 }
