@@ -76,7 +76,10 @@ function mapToUser ($form, $submission_data) {
   $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_adresse']['widget'][0]['address']['#default_value']['locality'] = $submission_data['adresse']['city'];
   $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_adresse']['widget'][0]['address']['#default_value']['postal_code'] = $submission_data['adresse']['postal_code'];
   $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_telephone']['widget'][0]['value']['#default_value'] = $submission_data['telephone'];
-  $form['reglementaire_profiles']['widget'][0]['entity']['field_date_naissance']['widget'][0]['value']['#default_value'] = new DrupalDateTime(date('Y-m-d H:i',strtotime($submission_data['date_de_naissance']))); 
+
+  $birth_date = new DrupalDateTime(date('Y-m-d',strtotime($submission_data['date_de_naissance'])));
+  $birth_date->add(new DateInterval('PT1H')); // Ajoute 1 heure sinon le navigateur décale la date d'un jour en moins (interprétation de 00:00:00)
+  $form['reglementaire_profiles']['widget'][0]['entity']['field_date_naissance']['widget'][0]['value']['#default_value'] = $birth_date;
   $form['reglementaire_profiles']['widget'][0]['entity']['field_licence_ffessm']['widget'][0]['value']['#default_value'] = $submission_data['ndeg_de_licence_ffessm']; 
   $form['membre_club_profiles']['widget'][0]['entity']['field_niveau_plongee']['widget']['#default_value'] = $submission_data['niveau_actuel']; 
   $form['membre_club_profiles']['widget'][0]['entity']['field_qualification_plongee']['widget']['#default_value'] = $submission_data['qualifications_actuelles']; 
