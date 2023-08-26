@@ -1,5 +1,5 @@
 {
-    "name": "preload_new_user",
+    "name": "aquarius/preload_new_user",
     "description": "Permet de préremplir les infos d'un nouvel utilisateur à partir d'un formulaire d'inscription",
     "type": "drupal-custom-module",
     "authors": [
