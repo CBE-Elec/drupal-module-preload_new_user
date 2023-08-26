@@ -1,0 +1,7 @@
+{
+    "name": "preload_new_user",
+    "type": "drupal-module",
+    "description": "Create new user with infor from URL",
+    "keywords": [],
+    "minimum-stability": "dev"
+}

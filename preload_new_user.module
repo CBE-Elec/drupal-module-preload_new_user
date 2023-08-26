@@ -1,0 +1,126 @@
+<?php
+
+/**
+ * @file
+ * Contains preload_new_user.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\webform\Entity\WebformSubmission;
+use Drupal\Core\Datetime\DrupalDateTime;
+
+/**
+ * Implements hook_help().
+ */
+function preload_new_user_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the preload_new_user module.
+    case 'help.page.preload_new_user':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('My Awesome Module') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function preload_new_user_theme() {
+  return [
+    'preload_new_user' => [
+      'render element' => 'children',
+    ],
+  ];
+}
+
+function mapFieldValues ($webform_value)
+{
+  $map_array = array(
+  "externe"=>2,
+  "interne"=>1,
+  "aucun"=>0,
+  "Oui"=>665,
+  "Non"=>664,
+  
+);
+  if ($map_array[$webform_value])
+  return $map_array[$webform_value];
+
+return ($webform_value);
+}
+
+function mapToUser ($form, $submission_data) {
+  
+
+  //print_r ($form['annuaire_profiles']);
+
+  
+  //foreach ($form['annuaire_profiles']['widget'][0]['entity']['field_photo']['widget'][0] as $field_name => $field) {
+  //  foreach ($form['annuaire_profiles']['photo'] as $field_name => $field) {
+      //echo ('<li>' . $field_name . '</li>');  }
+//echo($form['reglementaire_profiles']['widget'][0]['entity']['field_date_naissance']['widget'][0]['value']['#default_value']);
+// print_r($submission_data['contacts_en_cas_d_urgence']);
+ //print_r($submission_data);
+
+
+  $form['field_prenom']['widget'][0]['value']['#default_value'] = $submission_data["nom_et_prenom"]["first"];
+  $form['field_nom']['widget'][0]['value']['#default_value'] = $submission_data["nom_et_prenom"]["last"];
+  $form['field_autor_media']['widget']['#default_value'][0] = mapFieldValues($submission_data["autorisation_medias"]);
+  $form['annuaire_profiles']['widget'][0]['entity']['field_publication_annuaire']['widget']['#default_value'] = mapFieldValues($submission_data['masquage_coordonnees']);
+  $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_adresse']['widget'][0]['address']['#default_value']['address_line2'] = $submission_data['adresse']['address_2'];
+  $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_adresse']['widget'][0]['address']['#default_value']['address_line1'] = $submission_data['adresse']['address'];
+  $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_adresse']['widget'][0]['address']['#default_value']['locality'] = $submission_data['adresse']['city'];
+  $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_adresse']['widget'][0]['address']['#default_value']['postal_code'] = $submission_data['adresse']['postal_code'];
+  $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_telephone']['widget'][0]['value']['#default_value'] = $submission_data['telephone'];
+  $form['reglementaire_profiles']['widget'][0]['entity']['field_date_naissance']['widget'][0]['value']['#default_value'] = new DrupalDateTime(date('Y-m-d H:i',strtotime($submission_data['date_de_naissance']))); 
+  $form['reglementaire_profiles']['widget'][0]['entity']['field_licence_ffessm']['widget'][0]['value']['#default_value'] = $submission_data['ndeg_de_licence_ffessm']; 
+  $form['membre_club_profiles']['widget'][0]['entity']['field_niveau_plongee']['widget']['#default_value'] = $submission_data['niveau_actuel']; 
+  $form['membre_club_profiles']['widget'][0]['entity']['field_qualification_plongee']['widget']['#default_value'] = $submission_data['qualifications_actuelles']; 
+  $form['urgence_profiles']['widget'][0]['entity']['field_contact_urgence']['widget'][0]['subform']['field_prenom_nom']['widget'][0]['value']['#default_value']= $submission_data['contacts_en_cas_d_urgence'][0]['name'];
+  $form['urgence_profiles']['widget'][0]['entity']['field_contact_urgence']['widget'][0]['subform']['field_telephone']['widget'][0]['value']['#default_value']= $submission_data['contacts_en_cas_d_urgence'][0]['phone'];
+  $form['account']['mail']['#default_value']= $submission_data['courriel'];
+  $form['account']['name']['#default_value']= $submission_data["nom_et_prenom"]["first"].$submission_data["nom_et_prenom"]["last"][0];
+  $form['account']['notify']['#default_value']=true;
+  
+  //$date = strtotime($submission_data['date_de_naissance']); 
+  //var_dump($date);
+  //$drupalDate = new DrupalDateTime(date('Y-m-d H:i',strtotime($submission_data['date_de_naissance'])));
+  //var_dump($drupalDate);
+  
+   //var_dump($form);
+   //exit();
+  return $form;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for the user_register_form.
+ */
+function preload_new_user_form_user_register_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+    // Ajoutez ici les modifications que vous souhaitez apporter au formulaire.
+    
+
+    $inscription_id = \Drupal::request()->query->get('inscription_id');
+    //var_dump($form['$inscription_id']);
+
+    if ($inscription_id) {
+        // Le paramètre 'inscription_id' est présent dans l'URL.
+        $webform_submission = WebformSubmission::load($inscription_id);
+        
+        if ($webform_submission && $webform_submission->getWebform()->id() == 'inscription_au_club_aquarius_pou') {
+          echo ("Formulaire d'inscription n°".$inscription_id."<br>");
+          //echo ("<br>"); print_r($webform_submission->getElementData('nom_et_prenom'));
+          // Récupérez les champs et leurs valeurs de la soumission.
+          $submission_data = $webform_submission->getData();   
+
+          //var_dump($submission_data); exit();
+          $form = mapToUser ($form,$submission_data);
+          
+        } else {
+          echo ('inscription non trouvée !');
+        }
+    }
+  }

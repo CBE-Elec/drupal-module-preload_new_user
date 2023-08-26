@@ -1,0 +1,7 @@
+preload_new_user.ma-page:
+  path: '/ma-page'
+  defaults:
+    _entity_form: 'user.register'
+    _title: 'Titre de ma page'
+  requirements:
+    _permission: 'access content'

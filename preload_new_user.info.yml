@@ -1,0 +1,5 @@
+name: 'preload_new_user'
+type: module
+description: 'My Awesome Module'
+core_version_requirement: ^9.5 || ^10
+package: 'Aquarius'
