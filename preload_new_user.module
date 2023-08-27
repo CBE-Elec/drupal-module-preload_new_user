@@ -175,11 +175,13 @@ function preload_new_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterfac
         $submission_data = $webform_submission->getData();  // Récupérez les champs et leurs valeurs de la soumission.
         
         // On est sur la création d'un nouvel utilisateur
-        if ($form_id=="user_register_form" and  isset($submission_data['courriel']))
+        if ($form_id=="user_register_form")
           {
-          $form = mapToUser ($form,$submission_data);
+          if (isset($submission_data['courriel']))
+              $form = mapToUser ($form,$submission_data);
+          else
+            echo ("Utilisateur existant"); // On essaye de créer un nouvel utilisateur à partir d'un formulaire de réinscription
           }
-          else echo ("Utilisateur existant"); // On essaye de créer un nouvel utilisateur à partir d'un formulaire de réinscription
         // On est sur la création d'une inscription à une saison
         if ($form_id=="group_content_saison-group_membership_add_form")
           {
