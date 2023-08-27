@@ -40,9 +40,8 @@ function preload_new_user_theme() {
 function get_user_id_by_email($email) {
   // Recherche de l'utilisateur par adresse e-mail.
   $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['mail' => $email]);
-
   // Vérifiez s'il y a un utilisateur correspondant à l'adresse e-mail.
-  if (isset($users)) {
+  if (!empty($users)) {
     // Récupérez le premier utilisateur correspondant.
     $user = reset($users);
     // Récupérez l'identifiant de l'utilisateur.
@@ -51,6 +50,7 @@ function get_user_id_by_email($email) {
   }
   else {
     // Aucun utilisateur trouvé avec cette adresse e-mail.
+    echo "Pas d'utilisateur trouvé";
     return NULL;
   }
 }
