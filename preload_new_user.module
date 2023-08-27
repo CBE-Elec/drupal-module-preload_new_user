@@ -169,7 +169,7 @@ function preload_new_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterfac
       $webform_submission = WebformSubmission::load($inscription_id);
       $webform_entity = $webform_submission->getWebform();
       // Vérifier si le Webform existe et qu'il est bien du bon type
-      if (isset($webform_entity) and ($webform_entity->id()=="inscription_a_l_aquarius" or $webform_entity->id()=="reinscription_2023_2024"))
+      if (isset($webform_entity) and ($webform_entity->id()=="inscription_au_club_aquarius_pou" or $webform_entity->id()=="reinscription_2023_2024") or $webform_entity->id()=="inscription_au_club_aquarius_pou") // dernier nom pour dev_aqua Cyril
         {
         echo ("Formulaire d'inscription n°".$inscription_id."<br>");
         $submission_data = $webform_submission->getData();  // Récupérez les champs et leurs valeurs de la soumission.
