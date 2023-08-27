@@ -169,17 +169,17 @@ function preload_new_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterfac
       $webform_submission = WebformSubmission::load($inscription_id);
       $webform_entity = $webform_submission->getWebform();
       // Vérifier si le Webform existe et qu'il est bien du bon type
-      if (isset($webform_entity) and ($webform_entity->id()=="inscription_au_club_aquarius_pou" or $webform_entity->id()=="reinscription_2023_2024") or $webform_entity->id()=="inscription_au_club_aquarius_pou") // dernier nom pour dev_aqua Cyril
+      if (isset($webform_entity) and ($webform_entity->get('category')=="Inscriptions au club"))
         {
         echo ("Formulaire d'inscription n°".$inscription_id."<br>");
         $submission_data = $webform_submission->getData();  // Récupérez les champs et leurs valeurs de la soumission.
         
         // On est sur la création d'un nouvel utilisateur
-        if ($form_id=="user_register_form")
+        if ($form_id=="user_register_form" and  isset($submission_data['courriel']))
           {
           $form = mapToUser ($form,$submission_data);
           }
-
+          else echo ("Utilisateur existant"); // On essaye de créer un nouvel utilisateur à partir d'un formulaire de réinscription
         // On est sur la création d'une inscription à une saison
         if ($form_id=="group_content_saison-group_membership_add_form")
           {
