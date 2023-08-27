@@ -149,7 +149,7 @@ function mapToSaisonMember($form, $submission_data, $submission_id) {
   $form['field_date_de_la_derniere_plonge']['widget']['0']['value']['#default_value']=$last_dive_date;
   $form['field_nombre_de_plongees']['widget'][0]['value']['#default_value']=$submission_data['nombre_de_plongees'];
 
-if ($submission_data['niveau_souhaite']){
+if (!is_null($submission_data['niveau_souhaite'])){
   $term_name = \Drupal\taxonomy\Entity\Term::load($submission_data['niveau_souhaite'])->getName(); // On récupère le nom du niveau souhaité (taxonomie)
   $form['field_souhait_saison']['widget'][0]['value']['#default_value']=$term_name." et ".$submission_data['autre_niveau_prepare'];
 }
