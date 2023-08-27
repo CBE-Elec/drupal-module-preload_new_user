@@ -42,7 +42,7 @@ function get_user_id_by_email($email) {
   $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['mail' => $email]);
 
   // Vérifiez s'il y a un utilisateur correspondant à l'adresse e-mail.
-  if (!empty($users)) {
+  if (isset($users)) {
     // Récupérez le premier utilisateur correspondant.
     $user = reset($users);
     // Récupérez l'identifiant de l'utilisateur.
@@ -75,7 +75,7 @@ function mapFieldValues ($webform_value)
   "88.75"=>6, // TOP 3
   "12.50"=>7, //Piscine
 );
-  if ($map_array[$webform_value])
+  if (isset($map_array[$webform_value]))
   return $map_array[$webform_value];
 
 return ($webform_value);
@@ -116,11 +116,10 @@ function mapToUser ($form, $submission_data) {
 }
 
 function mapToSaisonMember($form, $submission_data, $submission_id) {
-  
   // On récupère l'ID de l'utilisateur à ajouter à la saison
   @$user_id=$submission_data['membre_id'];
   //si on n'a pas d'identifiant dans le formulaire (inscription nouveau membre), on récupère l'id de l'utilisateur à partir de son adresse e-mail
-  if ($user_id==NULL and $submission_data['courriel'])
+  if (is_null($user_id) and isset($submission_data['courriel']))
   {
     $user_id=get_user_id_by_email($submission_data['courriel']);
     //echo "via email";
@@ -132,7 +131,7 @@ function mapToSaisonMember($form, $submission_data, $submission_id) {
   $user_id=intval($user_id);  // Convertion du texte en entier (pour User::load())
   $form['entity_id']['widget']['#default_value']=$user_id;  // selection du user à inscrire
   $user = \Drupal\user\Entity\User::load($user_id); 
-  if ($user && $user->hasRole('gestionnaire_membres')) $form['group_roles']['widget']['#default_value']=['saison-gestionnaire_de_membre']; // On coche le role si l'utilisateur l'a
+  if (isset($user) && $user->hasRole('gestionnaire_membres')) $form['group_roles']['widget']['#default_value']=['saison-gestionnaire_de_membre']; // On coche le role si l'utilisateur l'a
   
   @$form['field_caution_recuperee']['widget']['value']['#default_value']=$submission_data['caution_recue'];
   $form['field_cotisation']['widget']['#default_value']=mapFieldValues($submission_data['cotisation_club']);
@@ -142,23 +141,21 @@ function mapToSaisonMember($form, $submission_data, $submission_id) {
   $form['field_montant_paye']['widget'][0]['value']['#default_value']=  str_replace([',', "€", " "], ['.', "", ""], strip_tags($submission_data['prix']));
  
   $form['field_fiche_autorisation_parenta']['widget']['#default_value']=$submission_data['ndeg_autorisation_parentale'];
-  if ($submission_data['ndeg_autorisation_parentale']) $form['field_autor_parent']['widget']['#default_value']=1; // Si on a une fiche d'autorisation parentale, on note comme reçu
+  if (isset($submission_data['ndeg_autorisation_parentale'])) $form['field_autor_parent']['widget']['#default_value']=1; // Si on a une fiche d'autorisation parentale, on note comme reçu
   
   $last_dive_date = new DrupalDateTime(date('Y-m-d',strtotime($submission_data['date_derniere_plongee'])));
   $last_dive_date->add(new DateInterval('PT1H')); // Ajoute 1 heure sinon le navigateur décale la date d'un jour en moins (interprétation de 00:00:00)
   $form['field_date_de_la_derniere_plonge']['widget']['0']['value']['#default_value']=$last_dive_date;
   $form['field_nombre_de_plongees']['widget'][0]['value']['#default_value']=$submission_data['nombre_de_plongees'];
 
-var_dump($submission_data['niveau_souhaite']); echo("toto");
-if (!is_null($submission_data['niveau_souhaite'])){
-  $term_name = \Drupal\taxonomy\Entity\Term::load($submission_data['niveau_souhaite'])->getName(); // On récupère le nom du niveau souhaité (taxonomie)
-  $form['field_souhait_saison']['widget'][0]['value']['#default_value']=$term_name." et ".$submission_data['autre_niveau_prepare'];
-}
-  $form['field_formulaire_inscription']['widget']['#default_value']=$submission_id;
-  
+  if (isset($submission_data['niveau_souhaite'])){
+    $term_name = \Drupal\taxonomy\Entity\Term::load($submission_data['niveau_souhaite'])->getName(); // On récupère le nom du niveau souhaité (taxonomie)
+    $form['field_souhait_saison']['widget'][0]['value']['#default_value']=$term_name." et ".$submission_data['autre_niveau_prepare'];
+  }
+    $form['field_formulaire_inscription']['widget']['#default_value']=$submission_id;
+    
   return $form;
 }
-
 
 
 function preload_new_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
@@ -166,11 +163,11 @@ function preload_new_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterfac
     {
     // Le paramètre 'inscription_id' est présent dans l'URL.
     $inscription_id = \Drupal::request()->query->get('inscription_id');
-    if ($inscription_id)
+    if (isset($inscription_id))
       {
       // On a une soumission correspondante
       $webform_submission = WebformSubmission::load($inscription_id);
-      if ($webform_submission)
+      if (isset($webform_submission))
         {
         echo ("Formulaire d'inscription n°".$inscription_id."<br>");
         $submission_data = $webform_submission->getData();  // Récupérez les champs et leurs valeurs de la soumission.
