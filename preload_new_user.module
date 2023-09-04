@@ -61,8 +61,8 @@ function mapFieldValues ($webform_value)
   "externe"=>2,
   "interne"=>1,
   "aucun"=>0,
-  "Oui"=>665,
-  "Non"=>664,
+  "Oui"=>484, // Valeur = id taxo sur Prod
+  "Non"=>483, // Valeur = id taxo sur Prod
   "140"=>1, //Tarif normal
   "115"=>2, //Tarif réduit
   "45.80"=>1, //Licence adulte
@@ -88,15 +88,15 @@ function mapToUser ($form, $submission_data) {
       //echo ('<li>' . $field_name . '</li>');  }
 //echo($form['reglementaire_profiles']['widget'][0]['entity']['field_date_naissance']['widget'][0]['value']['#default_value']);
 // print_r($submission_data['contacts_en_cas_d_urgence']);
- //print_r($submission_data);
+ //print_r($submission_data); 
 
-  $form['field_prenom']['widget'][0]['value']['#default_value'] = $submission_data["nom_et_prenom"]["first"];
-  $form['field_nom']['widget'][0]['value']['#default_value'] = $submission_data["nom_et_prenom"]["last"];
+  $form['field_prenom']['widget'][0]['value']['#default_value'] = ucwords(strtolower($submission_data["nom_et_prenom"]["first"]));
+  $form['field_nom']['widget'][0]['value']['#default_value'] = ucwords(strtolower($submission_data["nom_et_prenom"]["last"]));
   $form['field_autor_media']['widget']['#default_value'][0] = mapFieldValues($submission_data["autorisation_medias"]);
   $form['annuaire_profiles']['widget'][0]['entity']['field_publication_annuaire']['widget']['#default_value'] = mapFieldValues($submission_data['masquage_coordonnees']);
-  $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_adresse']['widget'][0]['address']['#default_value']['address_line2'] = $submission_data['adresse']['address_2'];
-  $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_adresse']['widget'][0]['address']['#default_value']['address_line1'] = $submission_data['adresse']['address'];
-  $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_adresse']['widget'][0]['address']['#default_value']['locality'] = $submission_data['adresse']['city'];
+  $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_adresse']['widget'][0]['address']['#default_value']['address_line2'] = ucwords(strtolower($submission_data['adresse']['address_2']));
+  $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_adresse']['widget'][0]['address']['#default_value']['address_line1'] = ucwords(strtolower($submission_data['adresse']['address']));
+  $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_adresse']['widget'][0]['address']['#default_value']['locality'] = ucwords(strtolower($submission_data['adresse']['city']));
   $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_adresse']['widget'][0]['address']['#default_value']['postal_code'] = $submission_data['adresse']['postal_code'];
   $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_telephone']['widget'][0]['value']['#default_value'] = $submission_data['telephone'];
 
@@ -106,7 +106,7 @@ function mapToUser ($form, $submission_data) {
   $form['reglementaire_profiles']['widget'][0]['entity']['field_licence_ffessm']['widget'][0]['value']['#default_value'] = $submission_data['ndeg_de_licence_ffessm']; 
   $form['membre_club_profiles']['widget'][0]['entity']['field_niveau_plongee']['widget']['#default_value'] = $submission_data['niveau_actuel']; 
   $form['membre_club_profiles']['widget'][0]['entity']['field_qualification_plongee']['widget']['#default_value'] = $submission_data['qualifications_actuelles']; 
-  $form['urgence_profiles']['widget'][0]['entity']['field_contact_urgence']['widget'][0]['subform']['field_prenom_nom']['widget'][0]['value']['#default_value']= $submission_data['contacts_en_cas_d_urgence'][0]['name'];
+  $form['urgence_profiles']['widget'][0]['entity']['field_contact_urgence']['widget'][0]['subform']['field_prenom_nom']['widget'][0]['value']['#default_value']= ucwords(strtolower($submission_data['contacts_en_cas_d_urgence'][0]['name']));
   $form['urgence_profiles']['widget'][0]['entity']['field_contact_urgence']['widget'][0]['subform']['field_telephone']['widget'][0]['value']['#default_value']= $submission_data['contacts_en_cas_d_urgence'][0]['phone'];
   $form['account']['mail']['#default_value']= $submission_data['courriel'];
   $form['account']['name']['#default_value']= $submission_data["nom_et_prenom"]["first"].$submission_data["nom_et_prenom"]["last"][0];
