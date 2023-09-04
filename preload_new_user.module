@@ -142,7 +142,8 @@ function mapToSaisonMember($form, $submission_data, $submission_id) {
     $form['field_montant_paye']['widget'][0]['value']['#default_value']=  str_replace([',', "€", " "], ['.', "", ""], strip_tags($submission_data['prix']));
    
     @$form['field_fiche_autorisation_parenta']['widget']['#default_value']=$submission_data['ndeg_autorisation_parentale'];
-    if (isset($submission_data['ndeg_autorisation_parentale'])) $form['field_autor_parent']['widget']['#default_value']=1; // Si on a une fiche d'autorisation parentale, on note comme reçu
+    if (isset($submission_data['ndeg_autorisation_parentale']) and $submission_data['ndeg_autorisation_parentale']!="")
+      $form['field_autor_parent']['widget']['#default_value']=1; // Si on a une fiche d'autorisation parentale, on note comme reçu
     
     $last_dive_date = new DrupalDateTime(date('Y-m-d',strtotime($submission_data['date_derniere_plongee'])));
     $last_dive_date->add(new DateInterval('PT1H')); // Ajoute 1 heure sinon le navigateur décale la date d'un jour en moins (interprétation de 00:00:00)
