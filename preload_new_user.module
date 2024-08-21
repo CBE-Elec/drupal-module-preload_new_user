@@ -8,6 +8,7 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\webform\Entity\WebformSubmission;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Psy\Command\ListCommand\MethodEnumerator;
 
 /**
  * Implements hook_help().
@@ -65,15 +66,15 @@ function mapFieldValues ($webform_value)
   "Non"=>483, // Valeur = id taxo sur Prod
   "140"=>1, //Tarif normal
   "115"=>2, //Tarif réduit
-  "45.80"=>1, //Licence adulte
-  "28.70"=>2, //Licence -16ans
-  "22"=>1, // Loisir 1
-  "27"=>3, // Loisir 2
-  "45.5"=>5, // Loisir 3
-  "42.5"=>2, // TOP 1
-  "53.75"=>4, // TOP 2
-  "88.75"=>6, // TOP 3
-  "12.50"=>7, //Piscine
+  "48.00"=>1, //Licence adulte
+  "30.00"=>2, //Licence -16ans
+  "23.50"=>1, // Loisir 1
+  "28.00"=>3, // Loisir 2
+  "48.00"=>5, // Loisir 3
+  "45.00"=>2, // TOP 1
+  "56.00"=>4, // TOP 2
+  "93.00"=>6, // TOP 3
+  "13.00"=>7, //Piscine
 );
   if (isset($map_array[$webform_value]))
   return $map_array[$webform_value];
@@ -171,13 +172,14 @@ function preload_new_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterfac
     {
     // Le paramètre 'inscription_id' est présent dans l'URL.
     $inscription_id = \Drupal::request()->query->get('inscription_id');
+
     if (isset($inscription_id))
       {
       // On a une soumission correspondante
       $webform_submission = WebformSubmission::load($inscription_id);
       $webform_entity = $webform_submission->getWebform();
       // Vérifier si le Webform existe et qu'il est bien du bon type
-      if (isset($webform_entity) and ($webform_entity->get('category')=="Inscriptions au club"))
+      if (isset($webform_entity) and ($webform_entity->get('categories')[0]=="Inscriptions au club"))
         {
         echo ("Formulaire d'inscription n°".$inscription_id."<br>");
         $submission_data = $webform_submission->getData();  // Récupérez les champs et leurs valeurs de la soumission.
