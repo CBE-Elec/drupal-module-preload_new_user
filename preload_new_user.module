@@ -66,7 +66,7 @@ function mapFieldValues ($webform_value)
   "Non"=>483, // Valeur = id taxo sur Prod
   "140"=>1, //Tarif normal
   "115"=>2, //Tarif réduit
-  "48.00"=>1, //Licence adulte
+  "48"=>1, //Licence adulte
   "30.00"=>2, //Licence -16ans
   "23.50"=>1, // Loisir 1
   "28.00"=>3, // Loisir 2
