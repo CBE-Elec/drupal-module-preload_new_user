@@ -64,10 +64,8 @@ function mapFieldValues ($webform_value)
   "aucun"=>0,
   "Oui"=>484, // Valeur = id taxo sur Prod
   "Non"=>483, // Valeur = id taxo sur Prod
-  "140"=>1, //Tarif normal
-  "115"=>2, //Tarif réduit
-  "48"=>1, //Licence adulte
-  "30.00"=>2, //Licence -16ans
+  "160"=>1, //Tarif normal
+  "135"=>2, //Tarif réduit
   "23.50"=>1, // Loisir 1
   "28.00"=>3, // Loisir 2
   "48.00"=>5, // Loisir 3
@@ -76,6 +74,13 @@ function mapFieldValues ($webform_value)
   "93.00"=>6, // TOP 3
   "13.00"=>7, //Piscine
 );
+
+function mapFieldValues2 ($webform_value)
+{
+  "48"=>1, //Licence adulte
+  "30.00"=>2, //Licence -16ans
+}
+
   if (isset($map_array[$webform_value]))
   return $map_array[$webform_value];
 
@@ -137,7 +142,7 @@ function mapToSaisonMember($form, $submission_data, $submission_id) {
     if ($user->hasRole('gestionnaire_membres')) $form['group_roles']['widget']['#default_value']=['saison-gestionnaire_de_membre']; // On coche le role si l'utilisateur l'a
 
     @$form['field_caution_recuperee']['widget']['value']['#default_value']=$submission_data['caution_recue'];
-    $form['field_cotisation']['widget']['#default_value']=mapFieldValues($submission_data['cotisation_club']);
+    $form['field_cotisation']['widget']['#default_value']=mapFieldValues2($submission_data['cotisation_club']);
     $form['field_licence']['widget']['#default_value']=mapFieldValues($submission_data['licence_ffessm']);
     $form['field_assurance']['widget']['#default_value']=mapFieldValues($submission_data['assurance_facultative']);
     // On enlève les tag <span>, les espaces et le € et on change la , en .
