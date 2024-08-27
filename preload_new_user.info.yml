@@ -2,5 +2,5 @@ name: 'Preload New User'
 type: module
 description: Permet de préremplir les infos d'un nouvel utilisateur à partir d'un formulaire d'inscription
 package: 'Aquarius'
-version: '1.1.8'
+version: '1.1.9'
 core_version_requirement: ^10
