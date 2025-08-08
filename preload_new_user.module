@@ -114,8 +114,7 @@ function mapToUser ($form, $submission_data) {
   $form['annuaire_profiles']['widget'][0]['entity']['field_contact']['widget'][0]['subform']['field_telephone']['widget'][0]['value']['#default_value'] = $submission_data['telephone'];
 
   $birth_date = new DrupalDateTime(date('Y-m-d',strtotime($submission_data['date_de_naissance'])));
-  //$birth_date->add(new DateInterval('PT1H')); // Ajoute 1 heure sinon le navigateur décale la date d'un jour en moins (interprétation de 00:00:00)
-  $birth_date->setTime(12, 0, 0); // fixe l'heure à 1h pour éviter les mauvaises interprétations des navigateurs dans le formulaire (à confirmer pour bug de décalage des dates de naissance)
+  $birth_date->setTime(5, 0, 0); // fixe l'heure à 5h pour éviter le décalage horaire GMT+1/2
   $form['reglementaire_profiles']['widget'][0]['entity']['field_date_naissance']['widget'][0]['value']['#default_value'] = $birth_date;
   $form['reglementaire_profiles']['widget'][0]['entity']['field_licence_ffessm']['widget'][0]['value']['#default_value'] = $submission_data['ndeg_de_licence_ffessm']; 
   $form['membre_club_profiles']['widget'][0]['entity']['field_niveau_plongee']['widget']['#default_value'] = $submission_data['niveau_actuel']; 
@@ -159,9 +158,13 @@ function mapToSaisonMember($form, $submission_data, $submission_id) {
     if (isset($submission_data['ndeg_autorisation_parentale']) and $submission_data['ndeg_autorisation_parentale']!="")
       $form['field_autor_parent']['widget']['#default_value']=1; // Si on a une fiche d'autorisation parentale, on note comme reçu
     
-    $last_dive_date = new DrupalDateTime(date('Y-m-d',strtotime($submission_data['date_derniere_plongee'])));
-    $last_dive_date->add(new DateInterval('PT1H')); // Ajoute 1 heure sinon le navigateur décale la date d'un jour en moins (interprétation de 00:00:00)
-    $form['field_date_de_la_derniere_plonge']['widget']['0']['value']['#default_value']=$last_dive_date;
+    if (!empty($submission_data['date_derniere_plongee']))
+      {
+      $last_dive_date = new DrupalDateTime(date('Y-m-d',strtotime($submission_data['date_derniere_plongee'])));
+      $last_dive_date->setTime(5, 0, 0); // fixe l'heure à 5h pour éviter le décalage horaire GMT+1/2
+      $form['field_date_de_la_derniere_plonge']['widget']['0']['value']['#default_value']=$last_dive_date;
+      $form['field_date_de_la_derniere_plonge']['widget']['0']['#date_increment']=0;
+      }
     $form['field_nombre_de_plongees']['widget'][0]['value']['#default_value']=$submission_data['nombre_de_plongees'];
 
     if (isset($submission_data['niveau_souhaite']) and $submission_data['niveau_souhaite']!= "aucun"){
