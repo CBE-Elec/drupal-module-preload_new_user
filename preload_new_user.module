@@ -66,13 +66,13 @@ function mapFieldValues ($webform_value)
   "Non"=>483, // Valeur = id taxo sur Prod
   "160"=>1, //Tarif normal
   "135"=>2, //Tarif réduit
-  "23.50"=>1, // Loisir 1
-  "28.00"=>3, // Loisir 2
-  "48.00"=>5, // Loisir 3
-  "45.00"=>2, // TOP 1
-  "56.00"=>4, // TOP 2
-  "93.00"=>6, // TOP 3
-  "13.00"=>7 //Piscine
+  "24.20"=>1, // Loisir 1
+  "28.85"=>3, // Loisir 2
+  "49.45"=>5, // Loisir 3
+  "46.35"=>2, // TOP 1
+  "57.70"=>4, // TOP 2
+  "95.80"=>6, // TOP 3
+  "13.40"=>7 //Piscine
 );
 
   if (isset($map_array[$webform_value]))
@@ -84,8 +84,8 @@ return ($webform_value);
 function mapFieldValues2 ($webform_value)
 {
   $map_array = array(
-   "48"=>1, //Licence adulte
-  "30.00"=>2 //Licence -16ans
+   "48.50"=>1, //Licence adulte
+  "30.50"=>2 //Licence -16ans
   );
 
   if (isset($map_array[$webform_value]))
